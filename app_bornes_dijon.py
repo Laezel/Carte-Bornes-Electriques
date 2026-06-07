@@ -92,7 +92,9 @@ def bloc_clampable(label, contenu, uid, seuil=130):
     )
 
 
+@st.cache_data(show_spinner=False)
 def load_data(url, force_refresh=False):
+    # Mis en cache : ne se relance que si 'url' ou 'force_refresh' change
     # 1) Fichier pré-généré livré avec l'app -> aucun téléchargement, aucun temps de chargement
     if not force_refresh and os.path.exists(DATA_FILE):
         return pd.read_csv(DATA_FILE, dtype=str)
@@ -147,7 +149,9 @@ def to_float(x):
         return None
 
 
+@st.cache_data(show_spinner=False)
 def process_data(df, rayon_km, puissance_min):
+    # Mis en cache : recalculé uniquement si les données, le rayon ou la puissance changent
     rows = []
     for _, row in df.iterrows():
         cb = is_true(row.get("paiement_cb"))
@@ -199,6 +203,9 @@ p_min = st.sidebar.select_slider("Puissance min (kW)", options=[22, 50, 100, 150
 
 st.sidebar.divider()
 force_refresh = st.sidebar.button("🔄 Forcer la mise à jour")
+if force_refresh:
+    # On vide le cache pour forcer un vrai rechargement des données
+    st.cache_data.clear()
 
 # --- Main ---
 st.title("🗺️ Bornes de Recharge - Style Google Maps")
@@ -206,7 +213,7 @@ st.markdown(
     "**Légende :** "
     "🟢 ≥ 150 kW (CB) · 🟠 ≥ 100 kW (CB) · 🔵 ≥ 50 kW (CB) · "
     "🔴 **Sans CB — paiement à l'acte uniquement**  \n"
-    "*Astuce : utilise le contrôle des calques (en haut à droite de la carte) pour afficher/masquer chaque couleur.*"
+    "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes de recharge rapide. Choisissez la moins chère !*"
 )
 
 data = process_data(load_data(RESOURCE_URL, force_refresh=force_refresh), rayon, p_min)
