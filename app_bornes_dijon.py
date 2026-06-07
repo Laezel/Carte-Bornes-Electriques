@@ -206,7 +206,7 @@ force_refresh = st.sidebar.button("🔄 Forcer la mise à jour")
 if force_refresh:
     # On vide le cache pour forcer un vrai rechargement des données
     st.cache_data.clear()
-n
+
 # --- Main ---
 st.title("Bornes de Recharges Dijon")
 st.markdown(
