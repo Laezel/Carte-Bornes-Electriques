@@ -208,12 +208,12 @@ if force_refresh:
     st.cache_data.clear()
 
 # --- Main ---
-st.title("🗺️ Bornes de Recharge - Style Google Maps")
+st.title("Bornes de Recharge - Données Ministérielles Officielles")
 st.markdown(
     "**Légende :** "
-    "🟢 ≥ 150 kW (CB) · 🟠 ≥ 100 kW (CB) · 🔵 ≥ 50 kW (CB) · "
-    "🔴 **Sans CB — paiement à l'acte uniquement**  \n"
-    "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes de recharge rapide. Choisissez la moins chère !*"
+    "🟢 ≥ 150 kW · 🟠 ≥ 100 kW · 🔵 ≥ 50 kW · \n"
+    "🔴 **Sans CB — paiement par App/QR uniquement**  \n"
+    "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes de recharge rapide !*"
 )
 
 data = process_data(load_data(RESOURCE_URL, force_refresh=force_refresh), rayon, p_min)
