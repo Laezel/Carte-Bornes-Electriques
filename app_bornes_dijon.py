@@ -206,14 +206,15 @@ force_refresh = st.sidebar.button("🔄 Forcer la mise à jour")
 if force_refresh:
     # On vide le cache pour forcer un vrai rechargement des données
     st.cache_data.clear()
-
+n
 # --- Main ---
-st.title("Bornes de Recharge - Données Ministérielles Officielles")
+st.title("Bornes de Recharges Dijon")
 st.markdown(
     "**Légende :** "
-    "🟢 ≥ 150 kW · 🟠 ≥ 100 kW · 🔵 ≥ 50 kW · \n"
+    "🟢 ≥ 150 kW · 🟠 ≥ 100W · 🔵 ≥ 50 kW · \n"
     "🔴 **Sans CB — paiement par App/QR uniquement**  \n"
-    "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes de recharge rapide !*"
+    "*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques) https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures-de-recharge-pour-vehicules-electriques*"
+    "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes : environ 1h pour une charge complete !*"
 )
 
 data = process_data(load_data(RESOURCE_URL, force_refresh=force_refresh), rayon, p_min)
