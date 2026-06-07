@@ -301,12 +301,11 @@ if not data.empty:
     # Contrôle des calques = filtre par couleur directement sur la carte
     folium.LayerControl(collapsed=False).add_to(m)
 
-    # Affichage de la carte avec retour d'interaction
-    output = st_folium(m, width="100%", height=600)
-
-    # Interaction au clic (affichage sous la carte si un point est sélectionné)
-    if output.get("last_object_clicked"):
-        st.info("💡 Vous avez cliqué sur une borne ! Les détails sont affichés dans la bulle sur la carte.")
+    # Affichage de la carte.
+    # returned_objects=[] -> st_folium ne renvoie aucune interaction à Python :
+    # cliquer sur un point ou déplacer/zoomer la carte ne déclenche plus de re-run inutile.
+    # (Les détails restent visibles dans les bulles directement sur la carte.)
+    st_folium(m, width="100%", height=600, returned_objects=[])
 
     # Tableau récapitulatif
     st.subheader("📋 Liste des stations à proximité")
