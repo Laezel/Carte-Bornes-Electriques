@@ -208,12 +208,18 @@ if force_refresh:
     st.cache_data.clear()
 
 # --- Main ---
+url = "https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures-de-recharge-pour-vehicules-electriques"
+link_text = "Base de données utilisée"
+
+# Create the markdown formatted link
+markdown_link = f"[{link_text}]({url})"
+
 st.title("Bornes de Recharges Dijon")
 st.markdown(
     "**Légende :** "
     "🟢 ≥ 150 kW · 🟠 ≥ 100W · 🔵 ≥ 50 kW · \n"
     "🔴 **Sans CB — paiement par App/QR uniquement**  \n"
-    "*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques) https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures-de-recharge-pour-vehicules-electriques*"
+    "*Base nationale des IRVE Infrastructures de Recharge pour Véhicules Électriques {markdown_link}*"
     "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes : environ 1h pour une charge complete !*"
 )
 
