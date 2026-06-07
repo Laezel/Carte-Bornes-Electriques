@@ -299,7 +299,7 @@ if not data.empty:
         ).add_to(feature_groups[color])
 
     # Contrôle des calques = filtre par couleur directement sur la carte
-    folium.LayerControl(collapsed=False).add_to(m)
+    folium.LayerControl(collapsed=True).add_to(m)
 
     # Affichage de la carte.
     # returned_objects=[] -> st_folium ne renvoie aucune interaction à Python :
