@@ -14,6 +14,8 @@ st.set_page_config(
     page_title="Bornes Electriques Carte Bancaire",
     page_icon="🗺️",
     layout="wide",
+    # "auto" : barre latérale dépliée sur ordinateur, repliée en menu hamburger sur mobile
+    initial_sidebar_state="auto",
 )
 
 # --- Constantes ---
@@ -208,6 +210,22 @@ if force_refresh:
     st.cache_data.clear()
 
 # --- Main ---
+# Optimisation mobile : mise en page responsive (marges réduites, carte dominante)
+st.markdown(
+    """
+    <style>
+    /* Petits écrans : marges réduites pour que la carte occupe tout l'espace */
+    @media (max-width: 640px) {
+        .block-container { padding: 0.5rem 0.5rem 2rem 0.5rem; }
+        h1 { font-size: 1.4rem; line-height: 1.2; }
+    }
+    /* Un peu d'air en haut sur grand écran */
+    .block-container { padding-top: 1.5rem; }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 url = "https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures-de-recharge-pour-vehicules-electriques"
 link_text = "Base de données utilisée"
 
@@ -305,7 +323,9 @@ if not data.empty:
             icon=folium.Icon(color=color, icon="bolt", prefix="fa"),
         ).add_to(feature_groups[color])
 
-    # Contrôle des calques = filtre par couleur directement sur la carte
+    # Contrôle des calques = filtre par couleur directement sur la carte.
+    # collapsed=True -> seulement une petite icône dans le coin ; la liste des filtres
+    # se déploie au survol/clic au lieu d'être affichée en grand en permanence.
     folium.LayerControl(collapsed=True).add_to(m)
 
     # Affichage de la carte.
@@ -314,8 +334,9 @@ if not data.empty:
     # (Les détails restent visibles dans les bulles directement sur la carte.)
     st_folium(m, width="100%", height=600, returned_objects=[])
 
-    # Tableau récapitulatif
-    st.subheader("📋 Liste des stations à proximité")
-    st.dataframe(data.sort_values("Distance"), use_container_width=True, hide_index=True)
+    # Tableau récapitulatif : section escamotable -> la carte reste l'élément dominant
+    # (le tableau n'est rendu qu'à l'ouverture, ce qui allège l'affichage mobile)
+    with st.expander(f"📋 Liste des {len(data)} stations à proximité", expanded=False):
+        st.dataframe(data.sort_values("Distance"), use_container_width=True, hide_index=True)
 else:
     st.warning("Aucune borne trouvée.")
