@@ -216,11 +216,11 @@ markdown_link = f"[{link_text}]({url})"
 
 st.title("Bornes de Recharges Dijon")
 st.markdown(
-    "**Légende :** "
-    "🟢 ≥ 150 kW · 🟠 ≥ 100W · 🔵 ≥ 50 kW · \n"
-    "🔴 **Sans CB — paiement par App/QR uniquement**  \n"
-    "*Base nationale des IRVE Infrastructures de Recharge pour Véhicules Électriques {markdown_link}*"
-    "*La ë-C3 se recharge à la même vitesse dans toutes ces bornes : environ 1h pour une charge complete !*"
+    f"**Légende :** "
+    f"🟢 ≥ 150 kW · 🟠 ≥ 100 kW · 🔵 ≥ 50 kW\n\n"
+    f"🔴 **Sans CB — paiement par App/QR uniquement**\n\n"
+    f"*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques) — {markdown_link}*\n\n"
+    f"*La ë-C3 se recharge à la même vitesse dans toutes ces bornes : environ 1h pour une charge complète !*"
 )
 
 data = process_data(load_data(RESOURCE_URL, force_refresh=force_refresh), rayon, p_min)
