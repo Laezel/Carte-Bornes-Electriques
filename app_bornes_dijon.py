@@ -221,6 +221,8 @@ st.markdown(
     }
     /* Un peu d'air en haut sur grand écran */
     .block-container { padding-top: 1.5rem; }
+    /* Masque le bouton « Fork » et la barre d'outils Streamlit (app déployée) */
+    [data-testid="stToolbar"] { display: none !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -230,11 +232,10 @@ url = "https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures
 link_text = "Base de données utilisée"
 markdown_link = f"[{link_text}]({url})"
 
-st.title("Bornes de Recharge - Dijon")
+st.subheader("Bornes de Recharge - Dijon")
 st.markdown(
     f"🟢 **Carte bancaire acceptée**\n\n"
     f"🟣 **Sans CB — app / badge / QR**\n\n"
-    f"*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques)*\n\n"
     f"*Tarifs indiqués à titre indicatif.*"
 )
 
@@ -252,13 +253,13 @@ if not data.empty:
     attr = "Google" if "Google" in map_type else "OpenStreetMap"
 
     # Création de la carte Folium (le fond de carte est exclu du filtre des calques)
-    m = folium.Map(location=[DIJON_LAT, DIJON_LON], zoom_start=13, tiles=None)
+    m = folium.Map(location=[DIJON_LAT, DIJON_LON], zoom_start=11, tiles=None)
     folium.TileLayer(tiles=tiles_dict[map_type], attr=attr, name=map_type, control=False).add_to(m)
 
     # Filtre directement sur la carte : un calque par moyen de paiement (contrôle en haut à droite)
     feature_groups = {
         "green": folium.FeatureGroup(name="🟢 Carte Bancaire Acceptée"),
-        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=False),
+        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=True),
     }
     for grp in feature_groups.values():
         grp.add_to(m)
@@ -272,7 +273,7 @@ if not data.empty:
             # Carte bancaire acceptée, quelle que soit la puissance -> vert
             color = "green"
 
-        paiement_color = "#663991" if row["Paiement CB"] == "Non" else "#188038"
+        paiement_color = "#8e24aa" if row["Paiement CB"] == "Non" else "#188038"
         maps_url = f"{GMAPS_SEARCH_BASE}{row['lat']},{row['lon']}"
 
         # Tarif et Infos : repliables au-delà de 3 lignes
