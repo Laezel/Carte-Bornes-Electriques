@@ -261,7 +261,7 @@ link_text = "Base de données utilisée"
 # Create the markdown formatted link
 markdown_link = f"[{link_text}]({url})"
 
-st.title("🗺️ Bornes de Recharge - Style Google Maps")
+st.title("Bornes de Recharge - Dijon")
 st.markdown(
     f"**Légende :** "
     f"🟢 **Carte bancaire acceptée** ·\n\n"
