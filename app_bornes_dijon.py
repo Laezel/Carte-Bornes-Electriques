@@ -255,12 +255,18 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
+url = "https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures-de-recharge-pour-vehicules-electriques"
+link_text = "Base de données utilisée"
+
+# Create the markdown formatted link
+markdown_link = f"[{link_text}]({url})"
+
 st.title("🗺️ Bornes de Recharge - Style Google Maps")
 st.markdown(
-    "**Légende :** "
-    "🟢 **Carte bancaire acceptée** · "
-    "🟣 **Sans CB — app / badge / QR**  \n"
-    "*Astuce : utilise l'icône des calques (en haut à droite de la carte) pour afficher/masquer une catégorie. Tarifs affichés à titre indicatif (estimés à la minute, base 40 kW).*"
+    f"**Légende :** "
+    f"🟢 **Carte bancaire acceptée** ·\n\n"
+    f"🟣 **Sans CB — app / badge / QR**\n\n"
+    f"*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques) — {markdown_link}*\n\n"
 )
 
 data = process_data(load_data(RESOURCE_URL, force_refresh=force_refresh), rayon, p_min)
