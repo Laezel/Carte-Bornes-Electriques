@@ -255,7 +255,7 @@ if not data.empty:
     attr = "Google" if "Google" in map_type else "OpenStreetMap"
 
     # Création de la carte Folium (le fond de carte est exclu du filtre des calques)
-    m = folium.Map(location=[DIJON_LAT, DIJON_LON], zoom_start=11, tiles=None)
+    m = folium.Map(location=[DIJON_LAT, DIJON_LON], zoom_start=10, tiles=None)
     folium.TileLayer(tiles=tiles_dict[map_type], attr=attr, name=map_type, control=False).add_to(m)
 
     # Filtre directement sur la carte : un calque par moyen de paiement (contrôle en haut à droite)
