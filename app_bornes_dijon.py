@@ -261,7 +261,7 @@ if not data.empty:
     # Filtre directement sur la carte : un calque par moyen de paiement (contrôle en haut à droite)
     feature_groups = {
         "green": folium.FeatureGroup(name="🟢 Carte Bancaire Acceptée"),
-        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=False),
+        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=True),
     }
     for grp in feature_groups.values():
         grp.add_to(m)
