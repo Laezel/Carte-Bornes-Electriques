@@ -268,12 +268,12 @@ if not data.empty:
     for idx, row in data.iterrows():
         if row["Paiement CB"] == "Non":
             # Sans CB (app / badge / QR) -> violet
-            color = "purple"
+            color = "#663991"
         else:
             # Carte bancaire acceptée, quelle que soit la puissance -> vert
             color = "green"
 
-        paiement_color = "#56016d" if row["Paiement CB"] == "Non" else "#188038"
+        paiement_color = "#663991" if row["Paiement CB"] == "Non" else "#188038"
         maps_url = f"{GMAPS_SEARCH_BASE}{row['lat']},{row['lon']}"
 
         # Tarif et Infos : repliables au-delà de 3 lignes
