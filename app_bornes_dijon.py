@@ -232,10 +232,9 @@ markdown_link = f"[{link_text}]({url})"
 
 st.title("Bornes de Recharge - Dijon")
 st.markdown(
-    f"**Légende :**\n\n"
     f"🟢 **Carte bancaire acceptée**\n\n"
     f"🟣 **Sans CB — app / badge / QR**\n\n"
-    f"*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques) — {markdown_link}*\n\n"
+    f"*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques)*\n\n"
     f"*Tarifs indiqués à titre indicatif.*"
 )
 
@@ -268,7 +267,7 @@ if not data.empty:
     for idx, row in data.iterrows():
         if row["Paiement CB"] == "Non":
             # Sans CB (app / badge / QR) -> violet
-            color = "#663991"
+            color = "purple"
         else:
             # Carte bancaire acceptée, quelle que soit la puissance -> vert
             color = "green"
