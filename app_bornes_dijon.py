@@ -94,6 +94,35 @@ def bloc_clampable(label, contenu, uid, seuil=130):
     )
 
 
+# La voiture charge à ~40 kW sur ces bornes : on transpose les €/kWh en €/min
+PUISSANCE_CHARGE_KW = 40.0
+
+
+def tarif_en_minute(tarif):
+    """Transpose un tarif en €/kWh vers un tarif estimé à la minute,
+    sur la base d'une charge à 40 kW (soit 40/60 kWh par minute)."""
+    tarif = clean_str(tarif)
+    if not tarif:
+        return ""
+    facteur = PUISSANCE_CHARGE_KW / 60.0  # kWh consommés par minute
+
+    def _convertir(m):
+        valeur = float(m.group(1).replace(",", "."))
+        return f"{valeur * facteur:.2f}".replace(".", ",") + " €/min"
+
+    # Remplace "0,40 €/kWh", "0.40€/kwh", "0,40 /kWh"... par l'équivalent à la minute
+    motif = re.compile(r"(\d+(?:[.,]\d+)?)\s*(?:€\s*)?/?\s*kwh", re.IGNORECASE)
+    converti, n = motif.subn(_convertir, tarif)
+    if n > 0:
+        return converti
+    # Aucune unité €/kWh détectée : on convertit le premier nombre rencontré
+    m = re.search(r"(\d+(?:[.,]\d+)?)", tarif)
+    if m:
+        valeur = float(m.group(1).replace(",", "."))
+        return "≈ " + f"{valeur * facteur:.2f}".replace(".", ",") + " €/min"
+    return tarif
+
+
 @st.cache_data(show_spinner=False)
 def load_data(url, force_refresh=False):
     # Mis en cache : ne se relance que si 'url' ou 'force_refresh' change
@@ -226,19 +255,12 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-url = "https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures-de-recharge-pour-vehicules-electriques"
-link_text = "Base de données utilisée"
-
-# Create the markdown formatted link
-markdown_link = f"[{link_text}]({url})"
-
-st.title("Bornes de Recharges Dijon")
+st.title("🗺️ Bornes de Recharge - Style Google Maps")
 st.markdown(
-    f"**Légende :** "
-    f"🟢 ≥ 150 kW · 🟠 ≥ 100 kW · 🔵 ≥ 50 kW\n\n"
-    f"🔴 **Sans CB — paiement par App/QR uniquement**\n\n"
-    f"*Base nationale des IRVE (Infrastructures de Recharge pour Véhicules Électriques) — {markdown_link}*\n\n"
-    f"*La ë-C3 se recharge à la même vitesse dans toutes ces bornes : environ 1h pour une charge complète !*"
+    "**Légende :** "
+    "🟢 **Carte bancaire acceptée** · "
+    "🟣 **Sans CB — app / badge / QR**  \n"
+    "*Astuce : utilise l'icône des calques (en haut à droite de la carte) pour afficher/masquer une catégorie. Tarifs affichés à titre indicatif (estimés à la minute, base 40 kW).*"
 )
 
 data = process_data(load_data(RESOURCE_URL, force_refresh=force_refresh), rayon, p_min)
@@ -258,12 +280,10 @@ if not data.empty:
     m = folium.Map(location=[DIJON_LAT, DIJON_LON], zoom_start=13, tiles=None)
     folium.TileLayer(tiles=tiles_dict[map_type], attr=attr, name=map_type, control=False).add_to(m)
 
-    # Filtre directement sur la carte : un calque par couleur (contrôle en haut à droite)
+    # Filtre directement sur la carte : un calque par moyen de paiement (contrôle en haut à droite)
     feature_groups = {
-        "green": folium.FeatureGroup(name="🟢 ≥ 150 kW (CB)"),
-        "orange": folium.FeatureGroup(name="🟠 ≥ 100 kW (CB)"),
-        "blue": folium.FeatureGroup(name="🔵 ≥ 50 kW (CB)"),
-        "red": folium.FeatureGroup(name="🔴 Sans CB (app / badge / QR)", show=False),
+        "green": folium.FeatureGroup(name="🟢 Carte Bancaire Acceptée"),
+        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=False),
     }
     for grp in feature_groups.values():
         grp.add_to(m)
@@ -271,19 +291,22 @@ if not data.empty:
     # Ajout des marqueurs
     for idx, row in data.iterrows():
         if row["Paiement CB"] == "Non":
-            # Sans CB mais paiement à l'acte -> rouge
-            color = "red"
+            # Sans CB (app / badge / QR) -> violet
+            color = "purple"
         else:
-            color = "green" if row["Puissance"] >= 150 else ("orange" if row["Puissance"] >= 100 else "blue")
+            # Carte bancaire acceptée, quelle que soit la puissance -> vert
+            color = "green"
 
-        paiement_color = "#d93025" if row["Paiement CB"] == "Non" else "#188038"
+        paiement_color = "#8e24aa" if row["Paiement CB"] == "Non" else "#188038"
         maps_url = f"{GMAPS_SEARCH_BASE}{row['lat']},{row['lon']}"
 
         # Tarif et Infos : repliables au-delà de 3 lignes
+        # Le tarif €/kWh est transposé en €/min (charge à 40 kW), à titre indicatif
         if row["Tarif"] and row["Tarif"] != "Non communiqué":
-            tarif_html = bloc_clampable("💶 Tarif (€/kWh) :", row["Tarif"], "tarif-" + str(idx))
+            tarif_min = tarif_en_minute(row["Tarif"])
+            tarif_html = bloc_clampable("💶 Tarif estimé à la minute (à titre indicatif) :", tarif_min, "tarif-" + str(idx))
         else:
-            tarif_html = '<div style="margin-bottom: 5px;"><strong>💶 Tarif (€/kWh) :</strong> Non communiqué</div>'
+            tarif_html = '<div style="margin-bottom: 5px;"><strong>💶 Tarif estimé (à titre indicatif) :</strong> Non communiqué</div>'
         infos_html = bloc_clampable("📝 Infos :", row["Observations"], "obs-" + str(idx))
 
         # Vérification manuelle Chargemap : proposée dès que le prix n'est pas indiqué
