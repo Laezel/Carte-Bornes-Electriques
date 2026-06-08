@@ -221,8 +221,8 @@ st.markdown(
     }
     /* Un peu d'air en haut sur grand écran */
     .block-container { padding-top: 1.5rem; }
-    /* Masque le bouton « Fork » et la barre d'outils Streamlit (app déployée) */
-    [data-testid="stToolbar"] { display: none !important; }
+    /* Masque les boutons « Fork » / GitHub (Community Cloud) tout en gardant le menu de réglages (thème clair / sombre / système) */
+    [data-testid="stToolbarActions"] { display: none !important; }
     </style>
     """,
     unsafe_allow_html=True,
@@ -232,7 +232,9 @@ url = "https://www.data.gouv.fr/datasets/base-nationale-des-irve-infrastructures
 link_text = "Base de données utilisée"
 markdown_link = f"[{link_text}]({url})"
 
-st.subheader("Bornes de Recharge - Dijon")
+st.header("Bornes de Recharge")
+st.subheader("Dijon")
+
 st.markdown(
     f"🟢 **Carte bancaire acceptée**\n\n"
     f"🟣 **Sans CB — app / badge / QR**\n\n"
@@ -259,7 +261,7 @@ if not data.empty:
     # Filtre directement sur la carte : un calque par moyen de paiement (contrôle en haut à droite)
     feature_groups = {
         "green": folium.FeatureGroup(name="🟢 Carte Bancaire Acceptée"),
-        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=True),
+        "purple": folium.FeatureGroup(name="🟣 Sans CB (app / badge / QR)", show=False),
     }
     for grp in feature_groups.values():
         grp.add_to(m)
@@ -318,6 +320,7 @@ if not data.empty:
             popup=popup,
             tooltip=f"{row['Station']} ({row['Puissance']} kW) - {row['Type paiement']}",
             icon=folium.Icon(color=color, icon="bolt", prefix="fa"),
+            z_index_offset=1000 if color == "green" else 0,
         ).add_to(feature_groups[color])
 
     # Contrôle des calques = filtre par couleur directement sur la carte.
