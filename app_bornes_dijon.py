@@ -200,7 +200,7 @@ def process_data(df, rayon_km, puissance_min):
 # --- Interface Sidebar ---
 st.sidebar.title("🛠️ Configuration")
 map_type = st.sidebar.selectbox("Type de carte", ["Google Maps (Plan)", "Google Maps (Satellite)", "Google Maps (Terrain)", "OpenStreetMap"])
-rayon = st.sidebar.slider("Rayon (km)", 5, 50, 15)
+rayon = st.sidebar.slider("Rayon (km)", 5, 50, 40)
 p_min = st.sidebar.select_slider("Puissance min (kW)", options=[22, 50, 100, 150, 300], value=50)
 
 st.sidebar.divider()
