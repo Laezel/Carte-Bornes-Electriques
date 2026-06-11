@@ -157,6 +157,9 @@ def process_data(df, rayon_km, puissance_min):
     rows = []
     for _, row in df.iterrows():
         cb = is_true(row.get("paiement_cb"))
+        # Izivia accepte la carte bancaire -> on force "Oui" même si la base indique le contraire
+        if "izivia" in clean_str(row.get("nom_operateur")).lower():
+            cb = True
         acte = is_true(row.get("paiement_acte"))
         obs = clean_str(row.get("observations"))
         # On garde les bornes payables par CB, OU (à défaut) payables à l'acte
