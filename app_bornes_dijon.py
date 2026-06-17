@@ -40,7 +40,7 @@ CACHE_FILE = "irve_cache.csv"   # cache d'un téléchargement de la base nationa
 #   (observations_en/zh, tarification_en/zh) générées par prepare_data.py
 # - Carte : libellés des tuiles Google via le paramètre hl
 # ==========================================================================
-LANGUAGES = {"Français": "fr", "English": "en", "中文": "zh"}
+LANGUAGES = {"🇫🇷 Français": "fr", "🇬🇧 English": "en", "🇨🇳 中文": "zh"}
 MAP_LANGUAGES = {"Français": "fr", "English": "en", "中文": "zh-CN"}
 MAP_KEYS = ["plan", "satellite", "terrain", "osm"]
 
@@ -490,11 +490,14 @@ def build_map_html(data, map_type, hl, lang):
     return m.get_root().render()
 
 
-# --- Interface Sidebar ---
-# Sélecteur de langue de l'interface (placé en premier pour traduire le reste)
-lang_label = st.sidebar.selectbox("🌐 Language / 语言 / Langue", list(LANGUAGES.keys()), index=0)
+# --- Sélecteur de langue (en haut à droite de la page, avec drapeaux) ---
+# Placé avant la barre latérale car son résultat (lang) sert à traduire toute l'interface.
+_, col_lang = st.columns([4, 1])
+with col_lang:
+    lang_label = st.selectbox("Langue", list(LANGUAGES.keys()), index=0, label_visibility="collapsed")
 lang = LANGUAGES[lang_label]
 
+# --- Interface Sidebar ---
 st.sidebar.title(t(lang, "config"))
 # Langue des libellés de la carte (tuiles Google)
 map_lang_label = st.sidebar.selectbox(t(lang, "map_lang"), list(MAP_LANGUAGES.keys()), index=0)
