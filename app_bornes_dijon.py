@@ -523,8 +523,9 @@ st.markdown(
         .block-container { padding: 0.5rem 0.5rem 2rem 0.5rem; }
         h1 { font-size: 1.4rem; line-height: 1.2; }
     }
-    /* Un peu d'air en haut sur grand écran */
-    .block-container { padding-top: 1.5rem; }
+    /* Un peu d'air en haut sur grand écran : descend le contenu (dont le sélecteur
+       de langue) sous la barre d'outils horizontale de Streamlit */
+    .block-container { padding-top: 3.5rem; }
     /* Masque les boutons « Fork » / GitHub (Community Cloud) tout en gardant le menu de réglages (thème clair / sombre / système) */
     [data-testid="stToolbarActions"] { display: none !important; }
     </style>
