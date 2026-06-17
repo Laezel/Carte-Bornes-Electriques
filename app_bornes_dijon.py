@@ -525,7 +525,7 @@ st.markdown(
     }
     /* Un peu d'air en haut sur grand écran : descend le contenu (dont le sélecteur
        de langue) sous la barre d'outils horizontale de Streamlit */
-    .block-container { padding-top: 3.5rem; }
+    .block-container { padding-top: 4rem; }
     /* Masque les boutons « Fork » / GitHub (Community Cloud) tout en gardant le menu de réglages (thème clair / sombre / système) */
     [data-testid="stToolbarActions"] { display: none !important; }
     </style>
