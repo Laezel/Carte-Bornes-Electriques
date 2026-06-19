@@ -504,7 +504,7 @@ map_lang_label = st.sidebar.selectbox(t(lang, "map_lang"), list(MAP_LANGUAGES.ke
 hl = MAP_LANGUAGES[map_lang_label]
 
 map_type = st.sidebar.selectbox(t(lang, "map_type"), MAP_KEYS, format_func=lambda k: t(lang, "map_" + k))
-rayon = st.sidebar.slider(t(lang, "radius"), 5, 150, 80)
+rayon = st.sidebar.slider(t(lang, "radius"), 5, 200, 80)
 p_min = st.sidebar.select_slider(t(lang, "power_min"), options=[22, 50, 100, 150, 300], value=50)
 
 st.sidebar.divider()
